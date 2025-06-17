@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Potencia</title>
+    <style>
+        /* --- Estilos Generales de la Página --- */
+        /* Es buena idea añadir estas dos reglas para asegurar que todo ocupe el 100% */
+html {
+    height: 100%;
+}
+
+body {
+    /* 1. Quitamos la imagen de fondo de aquí y lo hacemos un contenedor relativo */
+    position: relative;
+    margin: 0;
+    min-height: 100%; /* Asegura que el body ocupe toda la altura */
+
+    /* Mantenemos los estilos para centrar el teléfono */
+    font-family: system-ui, sans-serif;
+    padding: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+/* 2. Creamos una capa "antes" del contenido del body para el fondo */
+body::before {
+    content: ''; /* Los pseudo-elementos siempre necesitan esta propiedad */
+    position: fixed; /* Se queda fijo y cubre toda la ventana */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1; /* ¡MUY IMPORTANTE! Lo envía detrás de todo el contenido */
+
+    /* 3. Ponemos la imagen y sus propiedades en esta capa */
+    background-image: url('fondo1.png');
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    
+    /* 4. Aplicamos el desenfoque SÓLO a esta capa de fondo */
+    filter: blur(8px);
+    
+    /* (Opcional) Un pequeño truco para que no se vean bordes raros con el blur */
+    transform: scale(1.05);
+}
+
+
+        /* --- Contenedor Principal del Mockup de Teléfono --- */
+        .phone-mockup {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            user-select: none;
+        }
+
+        .phone-frame {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* --- Contenedor de la Pantalla --- */
+        .screen-content {
+            position: absolute;
+            top: 12.5%; 
+            left: 6%;
+            width: 88%;
+            height: 75%;
+            overflow-y: auto;
+            box-sizing: border-box; 
+        }
+
+        /* --- Estilos de la Calculadora (NUEVO TEMA VERDE) --- */
+        .calculator-card {
+            background-color: #2c3e50; /* Un azul marino oscuro como base */
+            color: #FFFFFF;
+            border-radius: 20px;
+            padding: 20px;
+            height: 100%;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+        }
+
+        h2 {
+            color: #FFFFFF;
+            text-align: center;
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #ecf0f1;
+            font-size: 0.9em;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 10px;
+            background-color: #FFFFFF;
+            border: 1px solid #d1d8e0;
+            border-radius: 8px;
+            font-size: 1em;
+            color: #2c3e50;
+            box-sizing: border-box;
+        }
+
+        .btn-calculate {
+            width: 100%;
+            padding: 12px;
+            margin-top: auto;
+            background-color: #2ECC71; /* Verde de acento (NUEVO COLOR) */
+            color: #FFFFFF;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-calculate:hover {
+            background-color: #27ae60; /* Verde más oscuro para hover */
+        }
+
+        .result-box {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #34495e;
+            border: 1px dashed #95a5a6;
+            border-radius: 8px;
+            text-align: center;
+            min-height: 70px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            transition: border-color 0.3s ease;
+        }
+        
+        .result-box.success { border-color: #2ECC71; } /* Verde de acento (NUEVO COLOR) */
+        .result-box.error { border-color: #e74c3c; }
+
+        .result-box p {
+            margin: 0;
+            font-size: 0.9em;
+            color: #ecf0f1;
+        }
+
+        .result-box .value {
+            display: block;
+            font-size: 1.4em;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        .result-box.success .value { color: #2ECC71; } /* Verde de acento (NUEVO COLOR) */
+        .result-box.error .value { color: #e74c3c; font-size: 1em; }
+    </style>
+</head>
+<body>
+
+    <div class="phone-mockup">
+        <img src="telefono.png" alt="Marco de teléfono" class="phone-frame">
+        
+        <div class="screen-content">
+            
+            <div class="calculator-card">
+                <h2>Potencia</h2>
+                <div class="form-group">
+                    <label for="power-potencia">Potencia (W)</label>
+                    <input type="number" id="power-potencia" class="input-field" placeholder="Dejar para calcular">
+                </div>
+                <div class="form-group">
+                    <label for="power-voltaje">Voltaje (V)</label>
+                    <input type="number" id="power-voltaje" class="input-field" placeholder="Dejar para calcular">
+                </div>
+                <div class="form-group">
+                    <label for="power-corriente">Corriente (A)</label>
+                    <input type="number" id="power-corriente" class="input-field" placeholder="Dejar para calcular">
+                </div>
+                <div id="power-result" class="result-box">
+                    <p>Resultado:</p>
+                    <span class="value">--</span>
+                </div>
+                <button id="power-calculate-btn" class="btn-calculate">Calcular</button>
+            </div>
+            
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const powerBtn = document.getElementById('power-calculate-btn');
+        const powerP = document.getElementById('power-potencia');
+        const powerV = document.getElementById('power-voltaje');
+        const powerI = document.getElementById('power-corriente');
+        const powerResultBox = document.getElementById('power-result');
+
+        powerBtn.addEventListener('click', () => {
+            const p = parseFloat(powerP.value);
+            const v = parseFloat(powerV.value);
+            const i = parseFloat(powerI.value);
+
+            let inputs = [p, v, i];
+            let validInputs = inputs.filter(val => !isNaN(val)).length;
+
+            powerResultBox.classList.remove('success', 'error');
+
+            if (validInputs !== 2) {
+                powerResultBox.classList.add('error');
+                powerResultBox.querySelector('.value').textContent = "Ingrese dos valores.";
+                return;
+            }
+
+            powerResultBox.classList.add('success');
+            let resultText = '';
+
+            if (isNaN(p)) { // Calcular Potencia
+                resultText = `Potencia: ${(v * i).toFixed(2)} W`;
+            } else if (isNaN(v)) { // Calcular Voltaje
+                resultText = `Voltaje: ${(p / i).toFixed(2)} V`;
+            } else if (isNaN(i)) { // Calcular Corriente
+                resultText = `Corriente: ${(p / v).toFixed(2)} A`;
+            }
+            powerResultBox.querySelector('.value').textContent = resultText;
+        });
+    });
+    </script>
+
+</body>
+</html>

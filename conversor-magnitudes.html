@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Principios y Cálculos - ElectroKit</title>
+    <style>
+       /* --- Estilos Generales de la Página --- */
+        /* Es buena idea añadir estas dos reglas para asegurar que todo ocupe el 100% */
+html {
+    height: 100%;
+}
+
+body {
+    /* 1. Quitamos la imagen de fondo de aquí y lo hacemos un contenedor relativo */
+    position: relative;
+    margin: 0;
+    min-height: 100%; /* Asegura que el body ocupe toda la altura */
+
+    /* Mantenemos los estilos para centrar el teléfono */
+    font-family: system-ui, sans-serif;
+    padding: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+/* 2. Creamos una capa "antes" del contenido del body para el fondo */
+body::before {
+    content: ''; /* Los pseudo-elementos siempre necesitan esta propiedad */
+    position: fixed; /* Se queda fijo y cubre toda la ventana */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1; /* ¡MUY IMPORTANTE! Lo envía detrás de todo el contenido */
+
+    /* 3. Ponemos la imagen y sus propiedades en esta capa */
+    background-image: url('fondo1.png');
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    
+    /* 4. Aplicamos el desenfoque SÓLO a esta capa de fondo */
+    filter: blur(8px);
+    
+    /* (Opcional) Un pequeño truco para que no se vean bordes raros con el blur */
+    transform: scale(1.05);
+}
+/* ... (tus otros estilos para html y body se mantienen igual) ... */
+
+/* Modificamos la capa de fondo para añadirle la animación */
+body::before {
+    content: ''; 
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1; 
+
+    background-image: url('fondo1.png');
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    
+    /* Mantenemos el desenfoque intacto */
+    filter: blur(8px);
+    
+    /* 1. APLICAMOS LA ANIMACIÓN QUE VAMOS A CREAR */
+    animation: zoomSuave 25s ease-in-out infinite;
+}
+
+/* 2. CREAMOS LA ANIMACIÓN DE ZOOM */
+@keyframes zoomSuave {
+    0% {
+        /* Empieza ligeramente ampliado */
+        transform: scale(1.1);
+    }
+    50% {
+        /* A la mitad del tiempo, se aleja (zoom out) */
+        transform: scale(1);
+    }
+    100% {
+        /* Vuelve al estado inicial para un bucle perfecto (zoom in) */
+        transform: scale(1.1);
+    }
+}
+
+        .phone-mockup {
+            position: relative;
+            width: 412px;
+            height: 834px;
+            background-image: url('telefono.png');
+            background-size: 100% 100%;
+            box-shadow: ;
+        }
+        
+        .app-container {
+            position: absolute;
+            top: 120px;
+            left: 21px;
+            width: 370px;
+            height: 600px;
+            background-color: #1E272E;
+            color: #ECF0F1;
+            border-radius: 35px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* Para que el contenido no se salga del borde redondeado */
+        }
+
+        /* --- NAVEGACIÓN POR PESTAÑAS (TABS) --- */
+        .tab-nav {
+            display: flex;
+            background-color: #34495E;
+        }
+
+        .tab-button {
+            flex-grow: 1;
+            padding: 15px;
+            text-align: center;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            background-color: transparent;
+            color: #bdc3c7;
+            transition: color 0.3s, border-bottom 0.3s;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab-button.active {
+            color: #ffffff;
+            border-bottom: 3px solid #3498DB; /* Acento azul para la pestaña activa */
+        }
+
+        /* --- CONTENIDO DE LAS PESTAÑAS --- */
+        .tab-content {
+            padding: 20px;
+            box-sizing: border-box;
+            height: 100%;
+            overflow-y: auto; /* Scroll si el contenido es largo */
+        }
+
+        .content-section {
+            display: none; /* Ocultar por defecto */
+        }
+
+        .content-section.active {
+            display: block; /* Mostrar la sección activa */
+        }
+        
+        /* --- ESTILOS ESPECÍFICOS DEL CONVERSOR --- */
+        .converter-tool {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .input-group, .result-group { display: flex; flex-direction: column; gap: 8px; }
+        input[type="number"], select {
+            background-color: #34495E; color: #ECF0F1; border: 1px solid #4a6278; border-radius: 8px;
+            padding: 12px; font-size: 1.1em; width: 100%; box-sizing: border-box;
+        }
+        .selectors-group { display: flex; align-items: flex-end; gap: 10px; }
+        .selector { flex-grow: 1; }
+        .swap-icon { font-size: 1.5em; color: #3498DB; cursor: pointer; padding: 8px; }
+        .result-box {
+            background-color: #161c21; border: 2px solid #4a6278; border-radius: 8px; padding: 15px; text-align: center;
+            font-size: 1.6em; font-weight: bold; color: #ffffff; min-height: 35px; word-wrap: break-word; transition: all 0.3s ease;
+        }
+        .result-box.valid { border-color: #2ECC71; color: #2ECC71; }
+        .result-box.invalid { border-color: #F1C40F; color: #F1C40F; font-size: 1.1em; }
+
+        /* --- ESTILOS ESPECÍFICOS DEL GLOSARIO --- */
+        .glossary-tool { display: flex; flex-direction: column; gap: 20px; }
+        #searchInput {
+            background-color: #34495E; color: #ECF0F1; border: 1px solid #4a6278; border-radius: 8px;
+            padding: 12px; font-size: 1.1em; width: 100%; box-sizing: border-box;
+        }
+        #glossaryList { list-style: none; padding: 0; margin: 0; }
+        #glossaryList li {
+            padding: 15px;
+            border-bottom: 1px solid #34495E;
+        }
+        #glossaryList li strong { color: #3498DB; } /* Acento azul para el título */
+        #glossaryList li span { font-size: 0.9em; color: #bdc3c7; }
+        
+    </style>
+</head>
+<body>
+
+    <div class="phone-mockup">
+        <div class="app-container">
+            <nav class="tab-nav">
+                <button class="tab-button active" onclick="showTab('converter')">Conversor</button>
+                <button class="tab-button" onclick="showTab('glossary')">Glosario</button>
+            </nav>
+
+            <main class="tab-content">
+                <section id="converter" class="content-section active">
+                    <div class="converter-tool">
+                        <div class="input-group">
+                            <label for="inputValue">Cantidad</label>
+                            <input type="number" id="inputValue" value="1">
+                        </div>
+                        <div class="selectors-group">
+                            <div class="selector">
+                                <label for="fromUnit">De:</label>
+                                <select id="fromUnit"></select>
+                            </div>
+                            <div class="swap-icon" onclick="swapUnits()">⇄</div>
+                            <div class="selector">
+                                <label for="toUnit">A:</label>
+                                <select id="toUnit"></select>
+                            </div>
+                        </div>
+                        <div class="result-group">
+                            <label>Resultado</label>
+                            <div class="result-box" id="resultBox">...</div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="glossary" class="content-section">
+                    <div class="glossary-tool">
+                        <input type="text" id="searchInput" placeholder="Buscar magnitud o símbolo...">
+                        <ul id="glossaryList">
+                            </ul>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        // --- LÓGICA DE NAVEGACIÓN POR PESTAÑAS ---
+        function showTab(tabName) {
+            const contents = document.querySelectorAll('.content-section');
+            contents.forEach(content => content.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+
+            const buttons = document.querySelectorAll('.tab-button');
+            buttons.forEach(button => button.classList.remove('active'));
+            document.querySelector(`.tab-button[onclick="showTab('${tabName}')"]`).classList.add('active');
+        }
+
+        // --- LÓGICA DEL GLOSARIO ---
+        const glossaryData = [
+            { term: 'Tensión (V)', definition: 'Diferencia de potencial eléctrico que impulsa a los electrones. Se mide en Volts (V).' },
+            { term: 'Corriente (I)', definition: 'Flujo de carga eléctrica a través de un conductor. Se mide en Amperes (A).' },
+            { term: 'Resistencia (R)', definition: 'Oposición que presenta un material al paso de la corriente. Se mide en Ohms (Ω).' },
+            { term: 'Potencia (P)', definition: 'Rapidez con la que se transfiere la energía. Se mide en Watts (W).' },
+            { term: 'Energía (E)', definition: 'Capacidad de realizar un trabajo. Se mide en Joules (J) o Kilowatt-hora (kWh).' },
+            { term: 'Frecuencia (f)', definition: 'Número de ciclos de una onda por segundo. Se mide en Hertz (Hz).' }
+        ];
+
+        const glossaryList = document.getElementById('glossaryList');
+        const searchInput = document.getElementById('searchInput');
+
+        function renderGlossary(filter = '') {
+            glossaryList.innerHTML = '';
+            const filteredData = glossaryData.filter(item => 
+                item.term.toLowerCase().includes(filter.toLowerCase()) || 
+                item.definition.toLowerCase().includes(filter.toLowerCase())
+            );
+            
+            filteredData.forEach(item => {
+                const li = document.createElement('li');
+                li.innerHTML = `<strong>${item.term}</strong><br><span>${item.definition}</span>`;
+                glossaryList.appendChild(li);
+            });
+        }
+        
+        searchInput.addEventListener('input', (e) => renderGlossary(e.target.value));
+
+        // --- LÓGICA DEL CONVERSOR (similar a la versión anterior) ---
+        const units = {
+            "Tensión": { "MV": 1e6, "kV": 1000, "V": 1, "mV": 0.001 },
+            "Corriente": { "kA": 1000, "A": 1, "mA": 0.001 },
+            "Potencia": { "GW": 1e9, "MW": 1e6, "kW": 1000, "W": 1, "HP": 745.7 },
+            "Resistencia": { "MΩ": 1e6, "kΩ": 1000, "Ω": 1 },
+            "Sección (Cable)": { "mm²": 1, "AWG": 0 }
+        };
+        const awgToMm2 = { "0000": 107.2, "000": 85.0, "00": 67.4, "0": 53.5, "1": 42.4, "2": 33.6, "4": 21.2, "6": 13.3, "8": 8.37, "10": 5.26, "12": 3.31, "14": 2.08, "16": 1.31 };
+
+        const dom = {
+            inputValue: document.getElementById('inputValue'),
+            fromUnit: document.getElementById('fromUnit'),
+            toUnit: document.getElementById('toUnit'),
+            resultBox: document.getElementById('resultBox')
+        };
+        
+        function populateSelectors() {
+            for (const group in units) {
+                const optgroupFrom = document.createElement('optgroup');
+                optgroupFrom.label = group;
+                const optgroupTo = document.createElement('optgroup');
+                optgroupTo.label = group;
+                for (const unit in units[group]) {
+                    optgroupFrom.innerHTML += `<option value="${unit}">${unit}</option>`;
+                    optgroupTo.innerHTML += `<option value="${unit}">${unit}</option>`;
+                }
+                dom.fromUnit.appendChild(optgroupFrom);
+                dom.toUnit.appendChild(optgroupTo);
+            }
+        }
+
+        function convert() {
+            dom.resultBox.classList.remove('valid', 'invalid');
+            const value = parseFloat(dom.inputValue.value);
+            const from = dom.fromUnit.value;
+            const to = dom.toUnit.value;
+            if (isNaN(value)) { dom.resultBox.textContent = "Número inválido"; dom.resultBox.classList.add('invalid'); return; }
+            let fromGroup, toGroup;
+            for(const group in units) { if(units[group].hasOwnProperty(from)) fromGroup = group; if(units[group].hasOwnProperty(to)) toGroup = group; }
+            if (fromGroup !== toGroup) { dom.resultBox.textContent = "Conversión inválida"; dom.resultBox.classList.add('invalid'); return; }
+            let baseValue;
+            if (from === 'AWG') { baseValue = awgToMm2[value.toString()]; if (!baseValue) { dom.resultBox.textContent = "AWG fuera de tabla"; dom.resultBox.classList.add('invalid'); return; }
+            } else { baseValue = value * units[fromGroup][from]; }
+            let finalValue;
+            if (to === 'AWG') { dom.resultBox.textContent = "Ver tabla"; dom.resultBox.classList.add('invalid'); return;
+            } else { finalValue = baseValue / units[toGroup][to]; finalValue = parseFloat(finalValue.toPrecision(5)); }
+            dom.resultBox.textContent = finalValue;
+            dom.resultBox.classList.add('valid');
+        }
+
+        function swapUnits(){ const temp = dom.fromUnit.value; dom.fromUnit.value = dom.toUnit.value; dom.toUnit.value = temp; convert(); }
+        [dom.inputValue, dom.fromUnit, dom.toUnit].forEach(el => el.addEventListener('input', convert));
+        
+        // --- INICIALIZACIÓN ---
+        populateSelectors();
+        renderGlossary();
+        dom.fromUnit.value = 'kW';
+        dom.toUnit.value = 'HP';
+        convert();
+    </script>
+</body>
+</html>
