@@ -3,168 +3,286 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Conversor Directo CLP a ARS</title>
-    <style>
-        :root {
-            --bg-color: #f4f7f9;
-            --card-bg: #ffffff;
-            --text-color: #333;
-            --primary-color: #28a745;
-            --label-color: #555;
-            --result-bg: #eaf7ec;
-            --border-color: #ddd;
+    <title>Calculadora en Teléfono v2</title>
+    <script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=xbHeosFjO_zbZHAGHbqYiRhcK7X61c8t-ignoy8NzTpQCjDYjzTPjOwUNIHXykV-HvcSLPIXqJsTNsxVP57dt_xJC_KonCAh5tf7eCfKNPFW6khw7tlcE9sjQV06eAGhBWKuGbjorOJWWvrSPrLTrWY8et6cJl9taFQBEMFJKbSAQMLM0oZv3vBplg-k9lomru7_TatWzboYILDNZ3w0jwUDOk7-vQk-xe8rirFv0iPIQ7fsoMicB8BMvlaH1M1nY4CQLzbDuGz4kQoz95QBfowRbmeKUgOMtVGInDRLvFs" charset="UTF-8"></script><link rel="stylesheet" crossorigin="anonymous" href="https://gc.kis.v2.scr.kaspersky-labs.com/E3E8934C-235A-4B0E-825A-35A08381A191/abn/main.css?attr=aHR0cHM6Ly9jb250cmlidXRpb24udXNlcmNvbnRlbnQuZ29vZ2xlLmNvbS9kb3dubG9hZD9jPUNneGlZWEprWDNOMGIzSmhaMlVTVHhJTWNtVnhkV1Z6ZEY5a1lYUmhHajhLTURBd01EWXpOMk00WkRZd00yRmpabUl3TkdJNE5HWXpOMkU0TVRBd016QTNaams0TXpsalltUXpNalUzTldFMk5oSUxFZ2NReE1hNjE2a1BHQUUmZmlsZW5hbWUmb3BpPTEwMzEzNTA1MA"/><style>
+       /* --- Estilos Generales de la Página --- */
+        /* Es buena idea añadir estas dos reglas para asegurar que todo ocupe el 100% */
+html {
+    height: 100%;
+}
+
+body {
+    /* 1. Quitamos la imagen de fondo de aquí y lo hacemos un contenedor relativo */
+    position: relative;
+    margin: 0;
+    min-height: 100%; /* Asegura que el body ocupe toda la altura */
+
+    /* Mantenemos los estilos para centrar el teléfono */
+    font-family: system-ui, sans-serif;
+    padding: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+/* 2. Creamos una capa "antes" del contenido del body para el fondo */
+body::before {
+    content: ''; /* Los pseudo-elementos siempre necesitan esta propiedad */
+    position: fixed; /* Se queda fijo y cubre toda la ventana */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1; /* ¡MUY IMPORTANTE! Lo envía detrás de todo el contenido */
+
+    /* 3. Ponemos la imagen y sus propiedades en esta capa */
+    background-image: url('fondo1.png');
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    
+    /* 4. Aplicamos el desenfoque SÓLO a esta capa de fondo */
+    filter: blur(8px);
+    
+    /* (Opcional) Un pequeño truco para que no se vean bordes raros con el blur */
+    transform: scale(1.05);
+}
+/* ... (tus otros estilos para html y body se mantienen igual) ... */
+
+/* Modificamos la capa de fondo para añadirle la animación */
+body::before {
+    content: ''; 
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1; 
+
+    background-image: url('fondo1.png');
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    
+    /* Mantenemos el desenfoque intacto */
+    filter: blur(8px);
+    
+    /* 1. APLICAMOS LA ANIMACIÓN QUE VAMOS A CREAR */
+    animation: zoomSuave 25s ease-in-out infinite;
+}
+
+/* 2. CREAMOS LA ANIMACIÓN DE ZOOM */
+@keyframes zoomSuave {
+    0% {
+        /* Empieza ligeramente ampliado */
+        transform: scale(1.1);
+    }
+    50% {
+        /* A la mitad del tiempo, se aleja (zoom out) */
+        transform: scale(1);
+    }
+    100% {
+        /* Vuelve al estado inicial para un bucle perfecto (zoom in) */
+        transform: scale(1.1);
+    }
+}
+        /* --- Contenedor Principal del Mockup de Teléfono --- */
+        .phone-mockup {
+            position: relative; /* Es la base para posicionar la pantalla */
+            width: 100%;
+            max-width: 400px; /* Ancho del teléfono en la página */
+            user-select: none; /* Para que la imagen del marco no se pueda seleccionar */
         }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
+
+        .phone-frame {
+            width: 100%;
+            height: auto;
+            display: block; /* Evita espacios extra debajo de la imagen */
+        }
+
+        /* --- Contenedor de la Pantalla (la parte más importante) --- */
+        .screen-content {
+            position: absolute;
+            
+            /* --- AJUSTA ESTOS VALORES SI LA CALCULADORA NO ENCAJA PERFECTO --- */
+            top: 12.5%; 
+            left: 6%;
+            width: 88%;
+            height: 75%;
+            /* --- FIN DE LA ZONA DE AJUSTE --- */
+            
+            overflow-y: auto; /* Agrega scroll si el contenido se desborda */
+            box-sizing: border-box; 
+        }
+
+        /* --- Estilos de la Calculadora (adaptados para la pantalla del teléfono) --- */
+        .calculator-card {
+            background-color: #1E272E;
+            color: #FFFFFF;
+            border-radius: 20px;
+            padding: 20px;
+            height: 100%;
+            box-sizing: border-box;
             display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
-            box-sizing: border-box;
+            flex-direction: column;
         }
-        .container {
-            background-color: var(--card-bg);
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-            max-width: 500px;
-            width: 100%;
+
+        h2 {
+            color: #FFFFFF;
             text-align: center;
-        }
-        h1 {
-            color: var(--text-color);
-            margin-bottom: 25px;
-            font-size: 1.8em;
-        }
-        .input-group {
-            margin-bottom: 20px;
-        }
-        .input-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: var(--label-color);
-            font-size: 1.1em;
-        }
-        .input-group input {
-            width: 100%;
-            padding: 15px;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            font-size: 1.5em;
-            text-align: center;
-            box-sizing: border-box;
-            transition: border-color 0.2s;
-        }
-        .input-group input:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.15);
-        }
-        .results {
-            margin-top: 25px;
-            padding: 20px;
-            background-color: var(--result-bg);
-            border-radius: 8px;
-            border: 1px solid #c3e6cb;
-        }
-        .results h2 {
             margin-top: 0;
-            margin-bottom: 10px;
-            font-size: 1.2em;
-            color: var(--label-color);
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            font-weight: 600;
         }
-        .results p {
-            margin: 0;
-            font-size: 2.2em;
-            font-weight: 700;
-            color: var(--primary-color);
-            word-wrap: break-word;
+
+        .form-group {
+            margin-bottom: 15px;
         }
-        .api-status {
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #d1d8e0;
             font-size: 0.9em;
-            color: #888;
-            margin-top: 20px;
-            height: 1em;
         }
+
+        .input-field {
+            width: 100%;
+            padding: 10px;
+            background-color: #FFFFFF;
+            border: 1px solid #d1d8e0;
+            border-radius: 8px;
+            font-size: 1em;
+            color: #1E272E;
+            box-sizing: border-box;
+        }
+
+        .btn-calculate {
+            width: 100%;
+            padding: 12px;
+            margin-top: auto; /* Empuja el botón hacia abajo */
+            background-color: #3498DB;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-calculate:hover {
+            background-color: #2980B9;
+        }
+
+        .result-box {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #2C3A47;
+            border: 1px dashed #4a5a6a;
+            border-radius: 8px;
+            text-align: center;
+            min-height: 70px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            transition: border-color 0.3s ease;
+        }
+        
+        .result-box.success { border-color: #3498DB; }
+        .result-box.error { border-color: #e74c3c; }
+
+        .result-box p {
+            margin: 0;
+            font-size: 0.9em;
+            color: #d1d8e0;
+        }
+
+        .result-box .value {
+            display: block;
+            font-size: 1.4em;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        .result-box.success .value { color: #3498DB; }
+        .result-box.error .value { color: #e74c3c; font-size: 1em; }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>Conversor Directo CLP a ARS</h1>
+    <div class="phone-mockup">
+        <img src="telefono.png" alt="Marco de teléfono" class="phone-frame">
         
-        <div class="input-group">
-            <label for="clpPrice">Monto en Pesos Chilenos (CLP)</label>
-            <input type="number" id="clpPrice" placeholder="Ingrese el monto en CLP" oninput="calculate()">
-        </div>
-
-        <div class="results" id="results">
-            <h2>Precio Estimado en Pesos Argentinos (ARS)</h2>
-            <p id="arsResult">$ 0,00</p>
-        </div>
-
-        <div class="api-status" id="apiStatus">
-            Buscando cotización actualizada...
+        <div class="screen-content">
+            
+            <div class="calculator-card">
+                <h2>Ley de Ohm</h2>
+                <div class="form-group">
+                    <label for="ohm-voltaje">Voltaje (V)</label>
+                    <input type="number" id="ohm-voltaje" class="input-field" placeholder="Dejar para calcular">
+                </div>
+                <div class="form-group">
+                    <label for="ohm-corriente">Corriente (A)</label>
+                    <input type="number" id="ohm-corriente" class="input-field" placeholder="Dejar para calcular">
+                </div>
+                <div class="form-group">
+                    <label for="ohm-resistencia">Resistencia (Ω)</label>
+                    <input type="number" id="ohm-resistencia" class="input-field" placeholder="Dejar para calcular">
+                </div>
+                <div id="ohm-result" class="result-box">
+                    <p>Resultado:</p>
+                    <span class="value">--</span>
+                </div>
+                <button id="ohm-calculate-btn" class="btn-calculate">Calcular</button>
+            </div>
+            
         </div>
     </div>
 
     <script>
-        let clpToArsRate = 0; // Variable global para guardar la tasa
+    document.addEventListener('DOMContentLoaded', function() {
+        const ohmBtn = document.getElementById('ohm-calculate-btn');
+        const ohmV = document.getElementById('ohm-voltaje');
+        const ohmI = document.getElementById('ohm-corriente');
+        const ohmR = document.getElementById('ohm-resistencia');
+        const ohmResultBox = document.getElementById('ohm-result');
 
-        // Función para formatear como moneda argentina
-        const formatAsARS = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' });
+        ohmBtn.addEventListener('click', () => {
+            const v = parseFloat(ohmV.value);
+            const i = parseFloat(ohmI.value);
+            const r = parseFloat(ohmR.value);
 
-        async function fetchRate() {
-            const statusDiv = document.getElementById('apiStatus');
-            try {
-                // Usamos USD como base para obtener las tasas más fiables
-                const response = await fetch('https://open.er-api.com/v6/latest/USD');
-                if (!response.ok) throw new Error('Error de red');
-                
-                const data = await response.json();
-                if (data.result === 'success' && data.rates.CLP && data.rates.ARS) {
-                    // Calculamos la tasa cruzada ARS por CLP
-                    clpToArsRate = data.rates.ARS / data.rates.CLP;
-                    statusDiv.textContent = `Tasa de cambio: 1 CLP = ${clpToArsRate.toFixed(4)} ARS`;
-                } else {
-                    throw new Error('No se encontraron las tasas requeridas.');
-                }
-            } catch (error) {
-                console.error('Error al obtener la cotización:', error);
-                statusDiv.textContent = 'No se pudo obtener la tasa. Intenta recargar.';
-                // Podríamos poner una tasa manual de emergencia aquí
-                // clpToArsRate = 1.25; // Ejemplo
-            }
-        }
+            let inputs = [v, i, r];
+            let validInputs = inputs.filter(val => !isNaN(val)).length;
 
-        function calculate() {
-            const clpPriceInput = document.getElementById('clpPrice');
-            const arsResultP = document.getElementById('arsResult');
+            ohmResultBox.classList.remove('success', 'error');
 
-            if (clpToArsRate === 0) {
-                arsResultP.textContent = "Esperando tasa...";
+            if (validInputs !== 2) {
+                ohmResultBox.classList.add('error');
+                ohmResultBox.querySelector('.value').textContent = "Ingrese dos valores.";
                 return;
             }
 
-            const clpPrice = parseFloat(clpPriceInput.value);
+            ohmResultBox.classList.add('success');
+            let resultText = '';
 
-            if (isNaN(clpPrice) || clpPrice < 0) {
-                arsResultP.textContent = "$ 0,00";
-                return;
+            if (isNaN(v)) { // Calcular Voltaje
+                resultText = `Voltaje: ${(i * r).toFixed(2)} V`;
+            } else if (isNaN(i)) { // Calcular Corriente
+                resultText = `Corriente: ${(v / r).toFixed(2)} A`;
+            } else if (isNaN(r)) { // Calcular Resistencia
+                resultText = `Resistencia: ${(v / i).toFixed(2)} Ω`;
             }
+            ohmResultBox.querySelector('.value').textContent = resultText;
+        });
+    });
 
-            const arsPrice = clpPrice * clpToArsRate;
-            arsResultP.textContent = formatAsARS.format(arsPrice);
-        }
-
-        // Cargar la tasa de cambio al abrir la página
-        window.onload = fetchRate;
-    </script>
+   
+</script>
 
 </body>
 </html>
