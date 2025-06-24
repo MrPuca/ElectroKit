@@ -3,286 +3,139 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora en Teléfono v2</title>
-    <script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=xbHeosFjO_zbZHAGHbqYiRhcK7X61c8t-ignoy8NzTpQCjDYjzTPjOwUNIHXykV-HvcSLPIXqJsTNsxVP57dt_xJC_KonCAh5tf7eCfKNPFW6khw7tlcE9sjQV06eAGhBWKuGbjorOJWWvrSPrLTrWY8et6cJl9taFQBEMFJKbSAQMLM0oZv3vBplg-k9lomru7_TatWzboYILDNZ3w0jwUDOk7-vQk-xe8rirFv0iPIQ7fsoMicB8BMvlaH1M1nY4CQLzbDuGz4kQoz95QBfowRbmeKUgOMtVGInDRLvFs" charset="UTF-8"></script><link rel="stylesheet" crossorigin="anonymous" href="https://gc.kis.v2.scr.kaspersky-labs.com/E3E8934C-235A-4B0E-825A-35A08381A191/abn/main.css?attr=aHR0cHM6Ly9jb250cmlidXRpb24udXNlcmNvbnRlbnQuZ29vZ2xlLmNvbS9kb3dubG9hZD9jPUNneGlZWEprWDNOMGIzSmhaMlVTVHhJTWNtVnhkV1Z6ZEY5a1lYUmhHajhLTURBd01EWXpOMk00WkRZd00yRmpabUl3TkdJNE5HWXpOMkU0TVRBd016QTNaams0TXpsalltUXpNalUzTldFMk5oSUxFZ2NReE1hNjE2a1BHQUUmZmlsZW5hbWUmb3BpPTEwMzEzNTA1MA"/><style>
-       /* --- Estilos Generales de la Página --- */
-        /* Es buena idea añadir estas dos reglas para asegurar que todo ocupe el 100% */
-html {
-    height: 100%;
-}
-
-body {
-    /* 1. Quitamos la imagen de fondo de aquí y lo hacemos un contenedor relativo */
-    position: relative;
-    margin: 0;
-    min-height: 100%; /* Asegura que el body ocupe toda la altura */
-
-    /* Mantenemos los estilos para centrar el teléfono */
-    font-family: system-ui, sans-serif;
-    padding: 40px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    box-sizing: border-box;
-}
-
-/* 2. Creamos una capa "antes" del contenido del body para el fondo */
-body::before {
-    content: ''; /* Los pseudo-elementos siempre necesitan esta propiedad */
-    position: fixed; /* Se queda fijo y cubre toda la ventana */
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1; /* ¡MUY IMPORTANTE! Lo envía detrás de todo el contenido */
-
-    /* 3. Ponemos la imagen y sus propiedades en esta capa */
-    background-image: url('fondo1.png');
-    background-size: cover;
-    background-position: center center;
-    background-repeat: no-repeat;
-    
-    /* 4. Aplicamos el desenfoque SÓLO a esta capa de fondo */
-    filter: blur(8px);
-    
-    /* (Opcional) Un pequeño truco para que no se vean bordes raros con el blur */
-    transform: scale(1.05);
-}
-/* ... (tus otros estilos para html y body se mantienen igual) ... */
-
-/* Modificamos la capa de fondo para añadirle la animación */
-body::before {
-    content: ''; 
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1; 
-
-    background-image: url('fondo1.png');
-    background-size: cover;
-    background-position: center center;
-    background-repeat: no-repeat;
-    
-    /* Mantenemos el desenfoque intacto */
-    filter: blur(8px);
-    
-    /* 1. APLICAMOS LA ANIMACIÓN QUE VAMOS A CREAR */
-    animation: zoomSuave 25s ease-in-out infinite;
-}
-
-/* 2. CREAMOS LA ANIMACIÓN DE ZOOM */
-@keyframes zoomSuave {
-    0% {
-        /* Empieza ligeramente ampliado */
-        transform: scale(1.1);
-    }
-    50% {
-        /* A la mitad del tiempo, se aleja (zoom out) */
-        transform: scale(1);
-    }
-    100% {
-        /* Vuelve al estado inicial para un bucle perfecto (zoom in) */
-        transform: scale(1.1);
-    }
-}
-        /* --- Contenedor Principal del Mockup de Teléfono --- */
-        .phone-mockup {
-            position: relative; /* Es la base para posicionar la pantalla */
-            width: 100%;
-            max-width: 400px; /* Ancho del teléfono en la página */
-            user-select: none; /* Para que la imagen del marco no se pueda seleccionar */
+    <title>Calculadora de Compras en Chile v2</title>
+    <style>
+        /* Mismos estilos que la versión anterior */
+        :root {
+            --bg-color: #f4f7f9; --card-bg: #ffffff; --text-color: #333; --primary-color: #007bff; --primary-hover: #0056b3; --label-color: #555; --result-bg: #e9f5ff; --real-cost-color: #28a745; --border-color: #ddd;
         }
-
-        .phone-frame {
-            width: 100%;
-            height: auto;
-            display: block; /* Evita espacios extra debajo de la imagen */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: var(--bg-color); color: var(--text-color); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box;
         }
-
-        /* --- Contenedor de la Pantalla (la parte más importante) --- */
-        .screen-content {
-            position: absolute;
-            
-            /* --- AJUSTA ESTOS VALORES SI LA CALCULADORA NO ENCAJA PERFECTO --- */
-            top: 12.5%; 
-            left: 6%;
-            width: 88%;
-            height: 75%;
-            /* --- FIN DE LA ZONA DE AJUSTE --- */
-            
-            overflow-y: auto; /* Agrega scroll si el contenido se desborda */
-            box-sizing: border-box; 
+        .container {
+            background-color: var(--card-bg); padding: 30px; border-radius: 12px; box-shadow: 0 8px 25px rgba(0,0,0,0.1); max-width: 500px; width: 100%;
         }
-
-        /* --- Estilos de la Calculadora (adaptados para la pantalla del teléfono) --- */
-        .calculator-card {
-            background-color: #1E272E;
-            color: #FFFFFF;
-            border-radius: 20px;
-            padding: 20px;
-            height: 100%;
-            box-sizing: border-box;
-            display: flex;
-            flex-direction: column;
+        h1 {
+            text-align: center; color: var(--text-color); margin-bottom: 25px; font-size: 1.8em;
         }
-
-        h2 {
-            color: #FFFFFF;
-            text-align: center;
-            margin-top: 0;
-            margin-bottom: 20px;
-            font-size: 1.5em;
-            font-weight: 600;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 500;
-            color: #d1d8e0;
-            font-size: 0.9em;
-        }
-
-        .input-field {
-            width: 100%;
-            padding: 10px;
-            background-color: #FFFFFF;
-            border: 1px solid #d1d8e0;
-            border-radius: 8px;
-            font-size: 1em;
-            color: #1E272E;
-            box-sizing: border-box;
-        }
-
-        .btn-calculate {
-            width: 100%;
-            padding: 12px;
-            margin-top: auto; /* Empuja el botón hacia abajo */
-            background-color: #3498DB;
-            color: #FFFFFF;
-            border: none;
-            border-radius: 8px;
-            font-size: 1.1em;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .btn-calculate:hover {
-            background-color: #2980B9;
-        }
-
-        .result-box {
-            margin-top: 15px;
-            padding: 10px;
-            background-color: #2C3A47;
-            border: 1px dashed #4a5a6a;
-            border-radius: 8px;
-            text-align: center;
-            min-height: 70px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            transition: border-color 0.3s ease;
-        }
-        
-        .result-box.success { border-color: #3498DB; }
-        .result-box.error { border-color: #e74c3c; }
-
-        .result-box p {
-            margin: 0;
-            font-size: 0.9em;
-            color: #d1d8e0;
-        }
-
-        .result-box .value {
-            display: block;
-            font-size: 1.4em;
-            font-weight: bold;
-            margin-top: 5px;
-        }
-
-        .result-box.success .value { color: #3498DB; }
-        .result-box.error .value { color: #e74c3c; font-size: 1em; }
+        .input-group { margin-bottom: 20px; }
+        .input-group label { display: block; margin-bottom: 8px; font-weight: 600; color: var(--label-color); font-size: 0.95em; }
+        .input-group input { width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 1em; box-sizing: border-box; transition: border-color 0.2s; }
+        .input-group input:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15); }
+        .calc-button { width: 100%; padding: 15px; background-color: var(--primary-color); color: white; border: none; border-radius: 8px; font-size: 1.1em; font-weight: 700; cursor: pointer; transition: background-color 0.2s; margin-top: 10px; }
+        .calc-button:hover { background-color: var(--primary-hover); }
+        .results { margin-top: 25px; padding: 20px; background-color: var(--result-bg); border-radius: 8px; border: 1px solid #bce0fd; display: none; }
+        .results h2 { margin-top: 0; margin-bottom: 20px; text-align: center; font-size: 1.4em; }
+        .results p { margin: 10px 0; font-size: 1.1em; display: flex; justify-content: space-between; }
+        .results span { font-weight: 700; }
+        .real-cost { color: var(--real-cost-color); font-size: 1.3em !important; padding: 10px; background-color: #eaf7ec; border-radius: 6px; }
+        .api-status { font-size: 0.8em; text-align: center; color: #888; margin-top: -10px; margin-bottom: 20px; height: 1em; }
     </style>
 </head>
 <body>
 
-    <div class="phone-mockup">
-        <img src="telefono.png" alt="Marco de teléfono" class="phone-frame">
+    <div class="container">
+        <h1>Calculadora de Compras en Chile v2.0</h1>
         
-        <div class="screen-content">
-            
-            <div class="calculator-card">
-                <h2>Ley de Ohm</h2>
-                <div class="form-group">
-                    <label for="ohm-voltaje">Voltaje (V)</label>
-                    <input type="number" id="ohm-voltaje" class="input-field" placeholder="Dejar para calcular">
-                </div>
-                <div class="form-group">
-                    <label for="ohm-corriente">Corriente (A)</label>
-                    <input type="number" id="ohm-corriente" class="input-field" placeholder="Dejar para calcular">
-                </div>
-                <div class="form-group">
-                    <label for="ohm-resistencia">Resistencia (Ω)</label>
-                    <input type="number" id="ohm-resistencia" class="input-field" placeholder="Dejar para calcular">
-                </div>
-                <div id="ohm-result" class="result-box">
-                    <p>Resultado:</p>
-                    <span class="value">--</span>
-                </div>
-                <button id="ohm-calculate-btn" class="btn-calculate">Calcular</button>
-            </div>
-            
+        <div class="input-group">
+            <label for="clpPrice">Precio en Pesos Chilenos (CLP)</label>
+            <input type="number" id="clpPrice" placeholder="Ej: 950000">
+        </div>
+
+        <hr style="border: none; border-top: 1px solid var(--border-color); margin: 25px 0;">
+        
+        <div class="input-group">
+            <label for="clpToUsdRate">Cotización del Dólar en Chile (CLP por 1 USD)</label>
+            <input type="number" id="clpToUsdRate" placeholder="Obteniendo cotización...">
+        </div>
+        <div class="api-status" id="apiStatus"></div>
+
+
+        <div class="input-group">
+            <label for="mepRate">Tu Cotización Dólar MEP (ARS por 1 USD)</label>
+            <input type="number" id="mepRate" placeholder="Ingresa el valor del Dólar MEP">
+        </div>
+
+        <div class="input-group">
+            <label for="oficialRate">Cotización Dólar Oficial (ARS por 1 USD)</label>
+            <input type="number" id="oficialRate" placeholder="Ingresa el valor del Dólar Oficial">
+        </div>
+
+        <button class="calc-button" onclick="calculate()">Calcular</button>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <p>Precio en Dólares (USD): <span id="usdResult"></span></p>
+            <p>Costo Referencia (Oficial): <span id="oficialResult"></span></p>
+            <p class="real-cost">Tu Costo Real (con MEP): <span id="mepResult"></span></p>
         </div>
     </div>
 
     <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const ohmBtn = document.getElementById('ohm-calculate-btn');
-        const ohmV = document.getElementById('ohm-voltaje');
-        const ohmI = document.getElementById('ohm-corriente');
-        const ohmR = document.getElementById('ohm-resistencia');
-        const ohmResultBox = document.getElementById('ohm-result');
+        // API Gratuita para tasas de cambio. Nota: La data puede tener algunas horas de retraso.
+        const apiUrl = 'https://open.er-api.com/v6/latest/USD';
+        const statusDiv = document.getElementById('apiStatus');
+        const clpToUsdInput = document.getElementById('clpToUsdRate');
 
-        ohmBtn.addEventListener('click', () => {
-            const v = parseFloat(ohmV.value);
-            const i = parseFloat(ohmI.value);
-            const r = parseFloat(ohmR.value);
+        window.onload = function() {
+            statusDiv.textContent = 'Buscando cotización CLP...';
+            fetch(apiUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('No se pudo obtener la respuesta de la red');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.result === 'success' && data.rates.CLP) {
+                        const clpRate = data.rates.CLP;
+                        clpToUsdInput.value = clpRate.toFixed(2);
+                        statusDiv.textContent = `Cotización actualizada. Tasa: 1 USD = ${clpRate.toFixed(2)} CLP`;
+                    } else {
+                        throw new Error('No se encontró la tasa de cambio para CLP.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error al obtener la cotización:', error);
+                    statusDiv.textContent = 'No se pudo obtener la cotización. Ingrésala manualmente.';
+                    clpToUsdInput.placeholder = 'Ingresa la tasa CLP por USD';
+                });
+        };
 
-            let inputs = [v, i, r];
-            let validInputs = inputs.filter(val => !isNaN(val)).length;
+        function calculate() {
+            // Obtener valores
+            const clpPrice = parseFloat(document.getElementById('clpPrice').value);
+            const clpToUsdRate = parseFloat(document.getElementById('clpToUsdRate').value);
+            const mepRate = parseFloat(document.getElementById('mepRate').value);
+            const oficialRate = parseFloat(document.getElementById('oficialRate').value);
 
-            ohmResultBox.classList.remove('success', 'error');
-
-            if (validInputs !== 2) {
-                ohmResultBox.classList.add('error');
-                ohmResultBox.querySelector('.value').textContent = "Ingrese dos valores.";
+            // Validar
+            if (isNaN(clpPrice) || isNaN(clpToUsdRate) || isNaN(mepRate) || isNaN(oficialRate)) {
+                alert("Por favor, completa todos los campos con números válidos.");
+                return;
+            }
+             if (clpToUsdRate <= 0) {
+                alert("La cotización del dólar en Chile debe ser mayor a cero.");
                 return;
             }
 
-            ohmResultBox.classList.add('success');
-            let resultText = '';
+            // Calcular
+            const usdPrice = clpPrice / clpToUsdRate;
+            const mepCost = usdPrice * mepRate;
+            const oficialCost = usdPrice * oficialRate;
 
-            if (isNaN(v)) { // Calcular Voltaje
-                resultText = `Voltaje: ${(i * r).toFixed(2)} V`;
-            } else if (isNaN(i)) { // Calcular Corriente
-                resultText = `Corriente: ${(v / r).toFixed(2)} A`;
-            } else if (isNaN(r)) { // Calcular Resistencia
-                resultText = `Resistencia: ${(v / i).toFixed(2)} Ω`;
-            }
-            ohmResultBox.querySelector('.value').textContent = resultText;
-        });
-    });
+            // Formatear
+            const formatAsUSD = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+            const formatAsARS = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' });
 
-   
-</script>
+            // Mostrar
+            document.getElementById('usdResult').textContent = formatAsUSD.format(usdPrice);
+            document.getElementById('mepResult').textContent = formatAsARS.format(mepCost);
+            document.getElementById('oficialResult').textContent = formatAsARS.format(oficialCost);
+
+            document.getElementById('results').style.display = 'block';
+        }
+    </script>
 
 </body>
 </html>
